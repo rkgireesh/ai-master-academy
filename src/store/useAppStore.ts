@@ -38,10 +38,11 @@ interface AppState {
   recentlyViewed: string[]
   recordView: (moduleId: string, lessonId: string) => void
 
-  // Theme
-  theme: 'light' | 'dark'
-  toggleTheme: () => void
-  setTheme: (t: 'light' | 'dark') => void
+  // Hydration flag — false on server and during first client render,
+  // set to true after persist middleware rehydrates from localStorage.
+  // Components that read persisted state must gate on this to avoid
+  // SSR hydration mismatches.
+  _hasHydrated: boolean
 
   // Helpers
   isCompleted: (moduleId: string, lessonId: string) => boolean
@@ -101,9 +102,7 @@ export const useAppStore = create<AppState>()(
         }))
       },
 
-      theme: 'dark',
-      toggleTheme: () => set((s) => ({ theme: s.theme === 'dark' ? 'light' : 'dark' })),
-      setTheme: (t) => set({ theme: t }),
+      _hasHydrated: false,
 
       isCompleted: (moduleId, lessonId) =>
         get().completedLessons.includes(key(moduleId, lessonId)),
@@ -119,12 +118,21 @@ export const useAppStore = create<AppState>()(
     }),
     {
       name: 'ai-mastery-academy',
+      // Critical: don't auto-read localStorage during store creation.
+      // Without this, the client's first render uses localStorage data
+      // while the server rendered with empty defaults → hydration mismatch.
+      skipHydration: true,
+      // After we manually call rehydrate() (in AppShell's useEffect),
+      // this callback fires. We use setState (not direct mutation) to
+      // ensure React subscribers re-render.
+      onRehydrateStorage: () => () => {
+        useAppStore.setState({ _hasHydrated: true })
+      },
       partialize: (s) => ({
         completedLessons: s.completedLessons,
         bookmarks: s.bookmarks,
         quizScores: s.quizScores,
         recentlyViewed: s.recentlyViewed,
-        theme: s.theme,
       }),
     }
   )
