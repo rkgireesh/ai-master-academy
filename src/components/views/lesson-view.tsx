@@ -19,12 +19,18 @@ import {
 
 export function LessonView({ moduleId, lessonId }: { moduleId: string; lessonId: string }) {
   const navigate = useAppStore((s) => s.navigate)
-  const isCompleted = useAppStore((s) => s.isCompleted)
   const markLessonComplete = useAppStore((s) => s.markLessonComplete)
   const unmarkLessonComplete = useAppStore((s) => s.unmarkLessonComplete)
-  const isBookmarked = useAppStore((s) => s.isBookmarked)
   const toggleBookmark = useAppStore((s) => s.toggleBookmark)
   const recordView = useAppStore((s) => s.recordView)
+
+  // Subscribe to the underlying arrays so the component re-renders when
+  // the user marks a lesson complete or toggles a bookmark. The helper
+  // functions isCompleted/isBookmarked read state at call time but do
+  // NOT trigger re-renders, so computing from the reactive arrays is
+  // required for the UI to update on click.
+  const completedLessons = useAppStore((s) => s.completedLessons)
+  const bookmarks = useAppStore((s) => s.bookmarks)
 
   const data = getLesson(moduleId, lessonId)
   const moduleData = getModule(moduleId)
@@ -46,8 +52,10 @@ export function LessonView({ moduleId, lessonId }: { moduleId: string; lessonId:
   }
 
   const { lesson, module: m, prev, next, index } = data
-  const completed = isCompleted(moduleId, lessonId)
-  const bookmarked = isBookmarked(moduleId, lessonId)
+  const lessonKey = `${moduleId}/${lessonId}`
+  // Derive booleans from the reactive arrays so the UI updates on click
+  const completed = completedLessons.includes(lessonKey)
+  const bookmarked = bookmarks.includes(lessonKey)
 
   // Build TOC from headings in the lesson body
   const tocItems: { id: string; text: string; level: number }[] = []
@@ -88,7 +96,7 @@ export function LessonView({ moduleId, lessonId }: { moduleId: string; lessonId:
             </div>
             <ul className="space-y-0.5 text-sm">
               {m.lessons.map((l, i) => {
-                const done = isCompleted(moduleId, l.id)
+                const done = completedLessons.includes(`${moduleId}/${l.id}`)
                 const active = l.id === lessonId
                 return (
                   <li key={l.id}>
