@@ -82,3 +82,32 @@ Stage Summary:
 - Labs discoverable from: navbar, home page (Featured Labs section), labs listing page
 - Each lab linked to its related curriculum module for lesson → lab → project flow
 - Platform now: 12 modules · 186 lessons · 6 labs · 12 projects · 12 quizzes · 64 glossary terms
+
+---
+Task ID: dashboard-animations
+Agent: main (Z.ai)
+Task: Redesign Dashboard with animated charts and KPI cards (Excel-style dashboard inspiration)
+
+Work Log:
+- Built AnimatedCounter component using framer-motion useInView + useSpring — counts up from 0 to value when scrolled into view
+- Built KpiCard component with: gradient top bar, animated counter, spring-in icon, trend badge (green up / red down), staggered entrance via framer-motion
+- Built 5 chart components with recharts + framer-motion entrance animations:
+  1. ModuleProgressChart — bar chart with gradient fill, completed-lessons per module, green highlight for 100% modules
+  2. LessonStatusDonut — donut chart with Completed vs Not started, animated arc draw
+  3. ActivityAreaChart — area chart with gradient fill, cumulative lessons over Mon-Sun
+  4. OverallProgressGauge — radial bar gauge with center % label, animates from 0 to value
+  5. QuizScoreLineChart — line chart with 0-100% Y-axis, dots + active dots
+- All charts use framer-motion staggered entrance (delay 0.1s apart, y: 24 → 0, scale: 0.97 → 1)
+- Rebuilt DashboardView with: header, 4 KPI cards row, 2-col chart grid (activity + gauge), 2-col chart grid (bars + donut), 3-col grid (quiz line + recommended + weekly streak), recently-viewed table + bookmarks panel, quiz scores grid, CTA
+- Added Weekly Streak card with animated day circles (spring-in one-by-one)
+- Fixed KPI trend display to hide when trend is 0 (cleaner empty state)
+- Set explicit YAxis ticks [0, 25, 50, 75, 100] on quiz chart to avoid duplicate-key warning
+- TypeScript: 0 errors · ESLint: 0 errors · Production build: succeeded
+- Browser-verified: all dashboard sections render (KPI cards, 5 charts, recommended, weekly streak, recently viewed table, bookmarks, quiz scores, CTA). No hydration errors.
+
+Stage Summary:
+- Dashboard redesigned with rich animated visualizations matching the Excel-style dashboard aesthetic
+- 4 animated KPI cards with counter-up animations
+- 5 recharts charts (bar, donut, area, radial gauge, line) with staggered entrance animations
+- Weekly streak visual with day-by-day spring-in
+- All animations respect the dark theme with violet/blue gradient palette
