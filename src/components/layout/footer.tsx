@@ -24,14 +24,20 @@ export function Footer() {
             A complete, free educational platform covering everything from AI fundamentals
             to production multi-agent systems — {modules.length} modules, {totalLessonCount()} lessons, {modules.length} quizzes, 12 hands-on projects.
           </p>
-          <div className="mt-3 flex gap-2">
-            <a href="https://github.com" target="_blank" rel="noreferrer" className="rounded-md p-1.5 text-muted-foreground hover:bg-background hover:text-foreground">
-              <Github className="h-4 w-4" />
+          <div className="mt-3 flex items-center gap-2">
+            <a
+              href="https://github.com/ai-mastery-academy"
+              target="_blank"
+              rel="noreferrer"
+              className="flex items-center gap-1.5 rounded-md border bg-background px-2.5 py-1 text-xs font-medium text-muted-foreground transition-colors hover:border-primary hover:text-foreground"
+            >
+              <Github className="h-3.5 w-3.5" />
+              Star on GitHub
             </a>
-            <a href="https://twitter.com" target="_blank" rel="noreferrer" className="rounded-md p-1.5 text-muted-foreground hover:bg-background hover:text-foreground">
+            <a href="https://twitter.com" target="_blank" rel="noreferrer" className="rounded-md p-1.5 text-muted-foreground hover:bg-background hover:text-foreground" aria-label="Twitter">
               <Twitter className="h-4 w-4" />
             </a>
-            <a href="https://linkedin.com" target="_blank" rel="noreferrer" className="rounded-md p-1.5 text-muted-foreground hover:bg-background hover:text-foreground">
+            <a href="https://linkedin.com" target="_blank" rel="noreferrer" className="rounded-md p-1.5 text-muted-foreground hover:bg-background hover:text-foreground" aria-label="LinkedIn">
               <Linkedin className="h-4 w-4" />
             </a>
           </div>
@@ -64,6 +70,11 @@ export function Footer() {
             <li><button onClick={() => navigate({ name: 'projects' })} className="text-muted-foreground hover:text-foreground">Projects Library</button></li>
             <li><button onClick={() => navigate({ name: 'glossary' })} className="text-muted-foreground hover:text-foreground">Glossary</button></li>
             <li><button onClick={() => navigate({ name: 'modules' })} className="text-muted-foreground hover:text-foreground">All Modules</button></li>
+            <li>
+              <a href="https://github.com/ai-mastery-academy" target="_blank" rel="noreferrer" className="flex items-center gap-1 text-muted-foreground hover:text-foreground">
+                <Github className="h-3 w-3" /> Source on GitHub
+              </a>
+            </li>
           </ul>
         </div>
       </div>

@@ -6,7 +6,7 @@ import { useAppStore, type Route } from '@/store/useAppStore'
 import { cn } from '@/lib/utils'
 import {
   Brain, LayoutDashboard, BookOpen, Map, FolderKanban, Search,
-  Menu, X, GraduationCap, BookMarked, FlaskConical,
+  Menu, X, GraduationCap, BookMarked, FlaskConical, Github, Star,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -102,6 +102,33 @@ export function Navbar() {
             <Search className="h-4 w-4" />
           </Button>
 
+          {/* GitHub button — prominent on desktop, icon-only on mobile */}
+          <a
+            href="https://github.com/ai-mastery-academy"
+            target="_blank"
+            rel="noreferrer"
+            className="hidden sm:flex"
+          >
+            <Button variant="outline" size="sm" className="gap-1.5">
+              <Github className="h-3.5 w-3.5" />
+              <span className="hidden md:inline">Star on GitHub</span>
+              <span className="hidden md:inline-flex items-center gap-0.5 rounded bg-amber-500/15 px-1 py-0.5 text-[10px] font-mono text-amber-600 dark:text-amber-400">
+                <Star className="h-2.5 w-2.5 fill-current" />
+                ★
+              </span>
+            </Button>
+          </a>
+          <a
+            href="https://github.com/ai-mastery-academy"
+            target="_blank"
+            rel="noreferrer"
+            className="sm:hidden"
+          >
+            <Button variant="ghost" size="icon" aria-label="GitHub">
+              <Github className="h-4 w-4" />
+            </Button>
+          </a>
+
           <ThemeToggle />
 
           {/* Mobile menu */}
@@ -136,6 +163,17 @@ export function Navbar() {
                     {item.label}
                   </button>
                 ))}
+                {/* GitHub link in mobile menu */}
+                <a
+                  href="https://github.com/ai-mastery-academy"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                >
+                  <Github className="h-4 w-4" />
+                  Star on GitHub
+                  <Star className="ml-auto h-3 w-3 fill-amber-500 text-amber-500" />
+                </a>
               </div>
               <form onSubmit={submitSearch} className="mt-4 px-3">
                 <div className="relative">
