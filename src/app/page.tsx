@@ -14,6 +14,8 @@ import { ProjectsView } from '@/components/views/projects-view'
 import { ProjectDetailView } from '@/components/views/project-detail-view'
 import { SearchView } from '@/components/views/search-view'
 import { QuizView } from '@/components/views/quiz-view'
+import { LabsView } from '@/components/views/labs-view'
+import { LabDetailView } from '@/components/views/lab-detail-view'
 
 export default function Home() {
   const route = useAppStore((s) => s.route)
@@ -38,6 +40,8 @@ function RouteRenderer({ route }: { route: ReturnType<typeof useAppStore.getStat
     case 'project':   return <ProjectDetailView projectId={route.projectId} />
     case 'search':    return <SearchView query={route.query} />
     case 'quiz':      return <QuizView moduleId={route.moduleId} />
+    case 'labs':      return <LabsView />
+    case 'lab':       return <LabDetailView labId={route.labId} />
     default:          return <HomeView />
   }
 }

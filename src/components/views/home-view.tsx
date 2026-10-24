@@ -77,7 +77,7 @@ export function HomeView() {
         <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 md:py-28">
           <div className="mx-auto max-w-3xl text-center">
             <Badge variant="outline" className="mb-4 border-primary/30 bg-primary/5 text-primary">
-              <Sparkles className="mr-1.5 h-3 w-3" /> 12 modules · {totalLessons} lessons · 12 projects
+              <Sparkles className="mr-1.5 h-3 w-3" /> 12 modules · {totalLessons} lessons · 6 labs · 12 projects
             </Badge>
             <h1 className="text-balance text-4xl font-bold tracking-tight sm:text-5xl md:text-6xl">
               Master the Technology Behind <span className="text-gradient">Modern AI</span>
@@ -243,6 +243,44 @@ export function HomeView() {
                 </Card>
               )
             })}
+          </div>
+        </div>
+      </section>
+
+      {/* FEATURED LABS */}
+      <section className="border-y bg-muted/20">
+        <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
+          <div className="mb-6 flex items-end justify-between">
+            <div>
+              <h2 className="text-2xl font-bold tracking-tight">Hands-on Labs</h2>
+              <p className="mt-1 text-sm text-muted-foreground">Run real experiments in your browser — no setup, no API keys.</p>
+            </div>
+            <Button variant="ghost" size="sm" onClick={() => navigate({ name: 'labs' })}>
+              All labs <ArrowRight className="ml-1 h-3.5 w-3.5" />
+            </Button>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {[
+              { id: 'neural-network-playground', title: 'Neural Network Playground', desc: 'Train a real MLP in-browser and watch the decision boundary evolve.', color: 'from-blue-500 to-violet-500' },
+              { id: 'tokenizer-lab', title: 'Tokenizer Lab', desc: 'See how text becomes tokens with BPE-style splitting and IDs.', color: 'from-cyan-500 to-blue-500' },
+              { id: 'attention-heatmap', title: 'Self-Attention Heatmap', desc: 'Type a sentence and inspect which tokens attend to which.', color: 'from-violet-500 to-fuchsia-500' },
+              { id: 'prompt-sandbox', title: 'Prompt Engineering Sandbox', desc: 'Try zero-shot, few-shot, and chain-of-thought side by side.', color: 'from-fuchsia-500 to-pink-500' },
+              { id: 'rag-sandbox', title: 'RAG Sandbox', desc: 'Paste a doc, ask a question, watch the full RAG pipeline run.', color: 'from-teal-500 to-cyan-500' },
+              { id: 'agent-builder', title: 'Agent Builder Lab', desc: 'Compose tools, set a goal, step through the agent loop.', color: 'from-orange-500 to-amber-500' },
+            ].map((l) => (
+              <Card
+                key={l.id}
+                onClick={() => navigate({ name: 'lab', labId: l.id })}
+                className="card-hover cursor-pointer overflow-hidden"
+              >
+                <div className={cn('h-1.5 bg-gradient-to-r', l.color)} />
+                <CardContent className="p-4">
+                  <h3 className="text-sm font-semibold">{l.title}</h3>
+                  <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">{l.desc}</p>
+                  <div className="mt-2 text-[11px] text-primary">Open lab →</div>
+                </CardContent>
+              </Card>
+            ))}
           </div>
         </div>
       </section>

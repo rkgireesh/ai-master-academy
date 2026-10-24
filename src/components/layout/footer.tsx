@@ -59,6 +59,7 @@ export function Footer() {
           <div className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Resources</div>
           <ul className="space-y-1.5 text-sm">
             <li><button onClick={() => navigate({ name: 'dashboard' })} className="text-muted-foreground hover:text-foreground">Dashboard</button></li>
+            <li><button onClick={() => navigate({ name: 'labs' })} className="text-muted-foreground hover:text-foreground">Practical Labs</button></li>
             <li><button onClick={() => navigate({ name: 'roadmap' })} className="text-muted-foreground hover:text-foreground">Learning Roadmap</button></li>
             <li><button onClick={() => navigate({ name: 'projects' })} className="text-muted-foreground hover:text-foreground">Projects Library</button></li>
             <li><button onClick={() => navigate({ name: 'glossary' })} className="text-muted-foreground hover:text-foreground">Glossary</button></li>

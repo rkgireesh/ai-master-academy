@@ -6,7 +6,7 @@ import { useAppStore, type Route } from '@/store/useAppStore'
 import { cn } from '@/lib/utils'
 import {
   Brain, LayoutDashboard, BookOpen, Map, FolderKanban, Search,
-  Menu, X, GraduationCap, BookMarked,
+  Menu, X, GraduationCap, BookMarked, FlaskConical,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -19,6 +19,7 @@ const NAV_ITEMS: { label: string; route: Route; icon: React.ComponentType<{ clas
   { label: 'Home', route: { name: 'home' }, icon: Brain },
   { label: 'Dashboard', route: { name: 'dashboard' }, icon: LayoutDashboard },
   { label: 'Modules', route: { name: 'modules' }, icon: BookOpen },
+  { label: 'Labs', route: { name: 'labs' }, icon: FlaskConical },
   { label: 'Roadmap', route: { name: 'roadmap' }, icon: Map },
   { label: 'Projects', route: { name: 'projects' }, icon: FolderKanban },
   { label: 'Glossary', route: { name: 'glossary' }, icon: BookMarked },
@@ -33,6 +34,7 @@ export function Navbar() {
 
   const isActive = (r: Route): boolean => {
     if (r.name === 'modules' && (route.name === 'modules' || route.name === 'module' || route.name === 'lesson' || route.name === 'quiz')) return true
+    if (r.name === 'labs' && (route.name === 'labs' || route.name === 'lab')) return true
     return r.name === route.name
   }
 

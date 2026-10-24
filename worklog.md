@@ -50,3 +50,35 @@ Stage Summary:
 - 12 modules · 186 lessons · 12 quizzes · 12 projects · 64 glossary terms · 10 interactive widgets
 - All view interactions browser-verified
 - Zero TypeScript errors, zero ESLint errors, zero console errors
+
+---
+Task ID: labs-addition
+Agent: main (Z.ai)
+Task: Add Practical Labs section with 6 hands-on in-browser experiments
+
+Work Log:
+- Added 'labs' and 'lab' routes to Zustand store
+- Added Labs entry to navbar + footer + home page (Featured Labs section)
+- Created labs data file (src/data/labs.ts) with 6 lab metadata entries
+- Built 6 fully interactive lab components:
+  1. Neural Network Playground — real MLP with from-scratch backprop, trains on XOR/circles/spiral/gaussian, live canvas decision boundary, adjustable layers/neurons/activation/learning rate
+  2. Tokenizer Lab — BPE-style tokenizer with visual colored token splits, token IDs, vocabulary size slider, example presets
+  3. Self-Attention Heatmap — type a sentence, see attention weight matrix as hoverable heatmap, temperature slider
+  4. Prompt Engineering Sandbox — try zero-shot/few-shot/CoT/role strategies on 4 tasks (sentiment/classify/math/summarize), shows constructed prompt + simulated output
+  5. RAG Sandbox — full pipeline: paste doc → chunk → embed (6-dim heuristic) → retrieve (cosine sim) → assemble prompt → generate answer with citations
+  6. Agent Builder Lab — pick tools, set goal, watch agent plan→select→execute→observe→reflect→decide step by step
+- Created Labs listing view + Lab detail view with related-module linking
+- Wired all routes into page.tsx router
+- Verified all 6 labs work in browser:
+  - NN Playground: trained 738 epochs, accuracy went 56% → 61% on circles dataset
+  - Tokenizer: "Hello world! AI is transforming how we work." → 11 tokens, 8 words, 44 chars
+  - Prompt Sandbox: correctly identified MIXED sentiment for ambiguous input
+  - RAG Sandbox: chunked doc into 4 chunks, generated answer with [1][3][3] citations
+  - Agent Builder: ran full plan→decide trace, gathered 2 facts, achieved goal
+- TypeScript: zero errors · ESLint: zero errors · Browser console: zero errors
+
+Stage Summary:
+- 6 new practical labs shipped, all running real algorithms in-browser (no external APIs)
+- Labs discoverable from: navbar, home page (Featured Labs section), labs listing page
+- Each lab linked to its related curriculum module for lesson → lab → project flow
+- Platform now: 12 modules · 186 lessons · 6 labs · 12 projects · 12 quizzes · 64 glossary terms

@@ -15,6 +15,8 @@ export type Route =
   | { name: 'project'; projectId: string }
   | { name: 'search'; query: string }
   | { name: 'quiz'; moduleId: string }
+  | { name: 'labs' }
+  | { name: 'lab'; labId: string }
 
 interface AppState {
   // Navigation
