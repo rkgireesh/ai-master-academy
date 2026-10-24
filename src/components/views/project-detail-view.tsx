@@ -1,6 +1,7 @@
 'use client'
 
 import * as React from 'react'
+import { motion } from 'framer-motion'
 import { useAppStore } from '@/store/useAppStore'
 import { projects } from '@/data'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -8,10 +9,12 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { ArticleContent } from '@/components/learn/article-content'
+import { ProjectPipeline, PROJECT_PIPELINES, PROJECT_IMAGES } from '@/components/projects/project-pipeline'
 import {
   ArrowLeft, Clock, FolderKanban, Code2, ListChecks, Shield, Wrench,
-  Play, AlertTriangle, Lightbulb, Target, Package,
+  Play, AlertTriangle, Lightbulb, Target, Package, Zap,
 } from 'lucide-react'
+import { cn } from '@/lib/utils'
 
 export function ProjectDetailView({ projectId }: { projectId: string }) {
   const navigate = useAppStore((s) => s.navigate)
@@ -37,18 +40,61 @@ export function ProjectDetailView({ projectId }: { projectId: string }) {
         <span className="text-foreground truncate">{p.title}</span>
       </nav>
 
-      {/* Header */}
-      <div className="mb-6">
-        <div className="flex items-center gap-2 text-xs text-muted-foreground">
-          <span className="font-mono">Project {projectIndex} of {projects.length}</span>
-          <span>·</span>
-          <span className="flex items-center gap-1"><Clock className="h-3 w-3" /> ~{p.estimatedHours} hours</span>
-          <span>·</span>
-          <Badge variant="outline" className="text-[10px]">{p.difficulty}</Badge>
-        </div>
-        <h1 className="mt-1 text-3xl font-bold tracking-tight">{p.title}</h1>
-        <p className="mt-1 text-base text-muted-foreground">{p.tagline}</p>
-      </div>
+      {/* Header with hero image */}
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="mb-6"
+      >
+        {/* Hero image */}
+        {PROJECT_IMAGES[p.id] && (
+          <div className="relative mb-4 h-40 overflow-hidden rounded-xl border">
+            <motion.img
+              src={PROJECT_IMAGES[p.id]}
+              alt={p.title}
+              className="h-full w-full object-cover"
+              initial={{ scale: 1.1 }}
+              animate={{ scale: 1 }}
+              transition={{ duration: 1.2, ease: 'easeOut' }}
+              onError={(e) => { e.currentTarget.style.display = 'none' }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
+            <div className="absolute bottom-3 left-4 right-4">
+              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                <span className="font-mono">Project {projectIndex} of {projects.length}</span>
+                <span>·</span>
+                <span className="flex items-center gap-1"><Clock className="h-3 w-3" /> ~{p.estimatedHours} hours</span>
+                <span>·</span>
+                <Badge variant="outline" className="text-[10px]">{p.difficulty}</Badge>
+              </div>
+              <h1 className="mt-1 text-2xl font-bold tracking-tight drop-shadow-lg">{p.title}</h1>
+            </div>
+          </div>
+        )}
+        <p className="text-base text-muted-foreground">{p.tagline}</p>
+      </motion.div>
+
+      {/* Animated AI Pipeline */}
+      {PROJECT_PIPELINES[p.id] && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="mb-6"
+        >
+          <Card className="border-primary/30 bg-primary/5">
+            <CardHeader className="pb-2">
+              <CardTitle className="flex items-center gap-2 text-base">
+                <Zap className="h-4 w-4 text-primary" /> AI Pipeline — How Data Flows
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ProjectPipeline nodes={PROJECT_PIPELINES[p.id]} />
+            </CardContent>
+          </Card>
+        </motion.div>
+      )}
 
       {/* Problem */}
       <Card className="mb-6">

@@ -1,12 +1,15 @@
 'use client'
 
 import * as React from 'react'
+import { motion } from 'framer-motion'
 import { useAppStore } from '@/store/useAppStore'
 import { projects } from '@/data'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
-import { FolderKanban, Search, Clock, ArrowRight } from 'lucide-react'
+import { ProjectPipeline, PROJECT_PIPELINES, PROJECT_IMAGES } from '@/components/projects/project-pipeline'
+import { FolderKanban, Search, Clock, ArrowRight, Zap, Filter } from 'lucide-react'
+import { cn } from '@/lib/utils'
 
 const DIFFICULTY_COLORS: Record<string, string> = {
   Beginner: 'border-emerald-500/30 bg-emerald-500/5 text-emerald-700 dark:text-emerald-300',
@@ -15,10 +18,18 @@ const DIFFICULTY_COLORS: Record<string, string> = {
   Expert: 'border-rose-500/30 bg-rose-500/5 text-rose-700 dark:text-rose-300',
 }
 
+const DIFFICULTY_GRADIENTS: Record<string, string> = {
+  Beginner: 'from-emerald-500 to-teal-500',
+  Intermediate: 'from-blue-500 to-cyan-500',
+  Advanced: 'from-violet-500 to-fuchsia-500',
+  Expert: 'from-rose-500 to-orange-500',
+}
+
 export function ProjectsView() {
   const navigate = useAppStore((s) => s.navigate)
   const [query, setQuery] = React.useState('')
   const [activeCat, setActiveCat] = React.useState<string>('All')
+  const [hoveredId, setHoveredId] = React.useState<string | null>(null)
 
   const categories = ['All', ...Array.from(new Set(projects.map((p) => p.difficulty)))]
 
@@ -37,18 +48,35 @@ export function ProjectsView() {
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
-      <div className="mb-6">
-        <div className="flex items-center gap-2">
-          <FolderKanban className="h-6 w-6 text-primary" />
-          <h1 className="text-2xl font-bold tracking-tight">Projects Library</h1>
-        </div>
+      {/* Hero header */}
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="mb-8 text-center"
+      >
+        <motion.div
+          initial={{ scale: 0, rotate: -180 }}
+          animate={{ scale: 1, rotate: 0 }}
+          transition={{ type: 'spring', stiffness: 200, damping: 15 }}
+          className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-violet-500 shadow-lg"
+        >
+          <FolderKanban className="h-7 w-7 text-white" />
+        </motion.div>
+        <h1 className="text-3xl font-bold tracking-tight">Projects Library</h1>
         <p className="mt-1 text-sm text-muted-foreground">
           {projects.length} hands-on projects — from beginner chatbots to a production AI application.
+          Each project shows its AI pipeline so you can see exactly how data flows.
         </p>
-      </div>
+      </motion.div>
 
       {/* Filters */}
-      <div className="mb-6 space-y-3">
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.1 }}
+        className="mb-6 space-y-3"
+      >
         <div className="relative">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
@@ -58,56 +86,131 @@ export function ProjectsView() {
             className="pl-9"
           />
         </div>
-        <div className="flex flex-wrap gap-1.5">
+        <div className="flex flex-wrap items-center gap-1.5">
+          <Filter className="mr-1 h-3 w-3 text-muted-foreground" />
           {categories.map((c) => (
             <button
               key={c}
               onClick={() => setActiveCat(c)}
-              className={`rounded-full border px-2.5 py-1 text-xs transition-colors ${
+              className={cn(
+                'rounded-full border px-2.5 py-1 text-xs transition-all',
                 activeCat === c
-                  ? 'border-primary bg-primary text-primary-foreground'
-                  : 'bg-card text-muted-foreground hover:bg-muted'
-              }`}
+                  ? 'border-primary bg-primary text-primary-foreground shadow-md'
+                  : 'bg-card text-muted-foreground hover:bg-muted hover:scale-105'
+              )}
             >
               {c}
             </button>
           ))}
         </div>
+      </motion.div>
+
+      {/* Project grid with images + pipeline diagrams */}
+      <div className="grid gap-4 lg:grid-cols-2">
+        {filtered.map((p, i) => {
+          const image = PROJECT_IMAGES[p.id]
+          const pipeline = PROJECT_PIPELINES[p.id] ?? []
+          const isHovered = hoveredId === p.id
+
+          return (
+            <motion.div
+              key={p.id}
+              initial={{ opacity: 0, y: 30, scale: 0.97 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ duration: 0.5, delay: i * 0.06, ease: [0.22, 1, 0.36, 1] }}
+              whileHover={{ y: -4 }}
+              onHoverStart={() => setHoveredId(p.id)}
+              onHoverEnd={() => setHoveredId(null)}
+              onClick={() => navigate({ name: 'project', projectId: p.id })}
+            >
+              <Card
+                className={cn(
+                  'group cursor-pointer overflow-hidden transition-all',
+                  isHovered && 'shadow-xl ring-2 ring-primary/30'
+                )}
+              >
+                {/* Image header with gradient overlay */}
+                <div className="relative h-32 overflow-hidden">
+                  <motion.img
+                    src={image}
+                    alt={p.title}
+                    className="h-full w-full object-cover"
+                    animate={{ scale: isHovered ? 1.08 : 1 }}
+                    transition={{ duration: 0.4 }}
+                    onError={(e) => {
+                      // Hide image on error, show gradient fallback
+                      e.currentTarget.style.display = 'none'
+                    }}
+                  />
+                  {/* Gradient overlay */}
+                  <div className={cn(
+                    'absolute inset-0 bg-gradient-to-t opacity-80',
+                    DIFFICULTY_GRADIENTS[p.difficulty]
+                  )} />
+                  {/* Difficulty badge */}
+                  <div className="absolute right-2 top-2">
+                    <Badge variant="outline" className={cn('border-white/40 bg-black/30 text-white backdrop-blur', DIFFICULTY_COLORS[p.difficulty])}>
+                      {p.difficulty}
+                    </Badge>
+                  </div>
+                  {/* Project number */}
+                  <div className="absolute left-3 top-2 font-mono text-[10px] text-white/80">
+                    Project {i + 1} / {projects.length}
+                  </div>
+                  {/* Title at bottom of image */}
+                  <div className="absolute bottom-2 left-3 right-3">
+                    <h3 className="text-lg font-bold text-white drop-shadow-lg">{p.title}</h3>
+                  </div>
+                </div>
+
+                <CardContent className="p-4">
+                  {/* Tagline */}
+                  <p className="mb-3 line-clamp-2 text-xs text-muted-foreground">{p.tagline}</p>
+
+                  {/* Animated pipeline diagram */}
+                  {pipeline.length > 0 && (
+                    <div className="mb-3 rounded-lg border bg-muted/20 p-2">
+                      <div className="mb-1 flex items-center gap-1 text-[9px] font-semibold uppercase tracking-wide text-muted-foreground">
+                        <Zap className="h-2.5 w-2.5" /> AI Pipeline
+                      </div>
+                      <ProjectPipeline nodes={pipeline} className="py-1" />
+                    </div>
+                  )}
+
+                  {/* Tech stack */}
+                  <div className="mb-3 flex flex-wrap gap-1">
+                    {p.techStack.slice(0, 4).map((t) => (
+                      <Badge key={t} variant="outline" className="text-[9px]">{t}</Badge>
+                    ))}
+                    {p.techStack.length > 4 && (
+                      <Badge variant="outline" className="text-[9px]">+{p.techStack.length - 4}</Badge>
+                    )}
+                  </div>
+
+                  {/* Footer */}
+                  <div className="flex items-center justify-between text-[10px] text-muted-foreground">
+                    <span className="flex items-center gap-1">
+                      <Clock className="h-2.5 w-2.5" /> ~{p.estimatedHours}h
+                    </span>
+                    <motion.span
+                      className="flex items-center gap-1 text-primary"
+                      animate={{ x: isHovered ? 4 : 0 }}
+                    >
+                      View project <ArrowRight className="h-3 w-3" />
+                    </motion.span>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          )
+        })}
       </div>
 
-      {/* Project grid */}
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        {filtered.map((p, i) => (
-          <Card
-            key={p.id}
-            onClick={() => navigate({ name: 'project', projectId: p.id })}
-            className="card-hover cursor-pointer"
-          >
-            <CardContent className="p-4">
-              <div className="mb-1 flex items-center justify-between">
-                <span className="font-mono text-[10px] text-muted-foreground">Project {i + 1}</span>
-                <Badge variant="outline" className={`text-[10px] ${DIFFICULTY_COLORS[p.difficulty]}`}>
-                  {p.difficulty}
-                </Badge>
-              </div>
-              <h3 className="text-sm font-semibold">{p.title}</h3>
-              <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">{p.tagline}</p>
-              <div className="mt-2 flex flex-wrap gap-1">
-                {p.techStack.slice(0, 3).map((t) => (
-                  <Badge key={t} variant="outline" className="text-[9px]">{t}</Badge>
-                ))}
-                {p.techStack.length > 3 && (
-                  <Badge variant="outline" className="text-[9px]">+{p.techStack.length - 3}</Badge>
-                )}
-              </div>
-              <div className="mt-2 flex items-center justify-between text-[10px] text-muted-foreground">
-                <span className="flex items-center gap-1"><Clock className="h-2.5 w-2.5" /> ~{p.estimatedHours}h</span>
-                <span className="flex items-center gap-1 text-primary">View <ArrowRight className="h-3 w-3" /></span>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+      {filtered.length === 0 && (
+        <div className="rounded-lg border border-dashed p-12 text-center text-sm text-muted-foreground">
+          No projects match your search.
+        </div>
+      )}
     </div>
   )
 }

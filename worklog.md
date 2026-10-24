@@ -111,3 +111,57 @@ Stage Summary:
 - 5 recharts charts (bar, donut, area, radial gauge, line) with staggered entrance animations
 - Weekly streak visual with day-by-day spring-in
 - All animations respect the dark theme with violet/blue gradient palette
+
+---
+Task ID: roadmap-projects-animations
+Agent: main (Z.ai)
+Task: Add rich animations to Roadmap + images and animated AI pipeline diagrams to Projects
+
+Work Log:
+- Generated 10 AI-themed images using z-ai-web-dev-sdk image generation:
+  chatbot.png, prompt.png, transformer.png, embeddings.png, rag.png, agent.png,
+  multi-agent.png, data-analysis.png, production.png, roadmap-hero.png
+  All saved to /home/z/my-project/public/projects/
+- Built scroll-animations.tsx with:
+  - ScrollDrawingPath: SVG line that draws as user scrolls (pathLength bound to scrollYProgress)
+  - PulsingDot: glowing dot with infinite pulse animation for "current stage" marker
+  - ScrollReveal: wrapper that fades+slides children in when scrolled into view
+- Rebuilt RoadmapView with rich animations:
+  - Spring-in hero icon (rotates from -180°)
+  - Animated overall progress bar with shimmer overlay
+  - 3 stat pills with animated counters
+  - Scroll-driven vertical line that fills as you scroll (useScroll + useTransform)
+  - Each stage card: ScrollReveal entrance with stagger (delay = i * 0.05)
+  - Spring-in node circles with scale animation
+  - PulsingDot on the current stage
+  - Pulsing ring around current stage
+  - "You are here" badge with pulsing opacity
+  - Animated stage progress bars (whileInView width animation)
+  - Hover lift on cards (whileHover scale 1.02, y -2)
+  - Trophy icon on past stages
+  - Final CTA with animated background glow
+- Built ProjectPipeline component — animated AI data flow diagram:
+  - Each project gets a custom pipeline of 4-6 nodes (e.g. User → LLM → Tool → Result)
+  - Nodes: spring-in entrance with stagger, pulsing ring behind each node, hover lift
+  - Connecting lines: gradient between node colors, animated scaleX draw-in
+  - Flowing dots: 2 dots per connection, animated left 0%→100% with staggered delays
+- Built PROJECT_PIPELINES map with custom pipelines for all 12 projects
+- Built PROJECT_IMAGES map linking project IDs to generated images
+- Redesigned ProjectsView:
+  - Spring-in hero icon
+  - Project cards now have: image header with gradient overlay, difficulty badge, project number, title overlaid on image
+  - Each card includes the animated AI Pipeline diagram
+  - Hover effects: image zoom (scale 1.08), card lift, shadow ring, "View project" arrow slides right
+  - Stagger entrance (delay = i * 0.06)
+- Updated ProjectDetailView:
+  - Hero image with gradient fade and scale-in animation (1.1 → 1 over 1.2s)
+  - Title and metadata overlaid on image
+  - "AI Pipeline — How Data Flows" section with animated pipeline right after header
+- TypeScript: 0 errors · ESLint: 0 errors
+- Browser-verified: Roadmap shows all 8 stages with animations, "You are here" on stage 2; Projects page shows 12 images (all loaded) + 12 animated pipelines; Project detail shows hero image + pipeline
+
+Stage Summary:
+- Roadmap: scroll-driven line drawing, pulsing current-stage indicator, spring-in nodes, animated progress bars, shimmer overlay, hover effects
+- Projects: 10 AI-themed images, animated pipeline diagrams with flowing dots for all 12 projects, hover zoom + lift
+- Project detail: hero image with scale-in, animated AI pipeline section
+- All animations respect the dark theme with violet/blue gradient palette
