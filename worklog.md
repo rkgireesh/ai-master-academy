@@ -165,3 +165,57 @@ Stage Summary:
 - Projects: 10 AI-themed images, animated pipeline diagrams with flowing dots for all 12 projects, hover zoom + lift
 - Project detail: hero image with scale-in, animated AI pipeline section
 - All animations respect the dark theme with violet/blue gradient palette
+
+---
+Task ID: glossary-animations-symbols
+Agent: main (Z.ai)
+Task: Add rich animations and symbols to the Glossary section
+
+Work Log:
+- Built CATEGORY_STYLES map with symbol + color + border + gradient for all 11 categories:
+  🤖 AI Fundamentals, 📈 Machine Learning, 🧠 Deep Learning, ✨ Generative AI,
+  💬 LLM, 🔍 RAG, 📐 Embeddings, 🤝 Agents, 🔧 Tools & MCP, 🕸️ Multi-Agent, 🚀 Production
+- Built TERM_SYMBOLS map with per-term emojis for 50+ common AI terms:
+  👁️ Attention, 🔄 Autoregressive, ↩️ Backpropagation, ✂️ BPE/Tokenization, 🧩 Chunking,
+  🪟 Context Window, 📐 Cosine Similarity, 🎯 Cross-Entropy/LoRA, 🌊 Diffusion Model,
+  🔢 Embedding, 📼 Episodic Memory, 🔧 Fine-Tuning/Tool Calling, 🏛️ Foundation Model,
+  📞 Function Calling, 🎭 GAN/Overfitting, 📉 Gradient Descent/Underfitting, 🗺️ HNSW,
+  ⚡ Inference/ReLU, 💾 KV Cache, 📚 Pretraining, 🗜️ Quantization/QLoRA, 🔍 RAG,
+  💭 ReAct, 🎓 RLHF, 🏆 Reranking, 🎲 Sampling, 👁️ Self-Attention, 🔎 Semantic Search,
+  📊 Softmax, 🛑 Stop Sequence, 🌡️ Temperature, 🔤 Token, 🤖 Transformer, 🎨 VAE,
+  🗄️ Vector Database, 0️⃣ Zero-Shot, 1️⃣ Few-Shot
+- Animated hero header:
+  - Rotating symbol every 2s (🤖 → 🧠 → ✨ → 💬 → 🔍 → 🔧 → 🚀 → 📐)
+  - AnimatePresence with rotate + scale transitions
+  - Animated counter for term count and category count
+- Animated search bar:
+  - Search icon rotates 360° when typing
+  - Clear button (✕) appears with spring animation
+  - whileFocus scale effect
+- Category filter chips:
+  - Spring-in entrance with stagger (delay = i * 0.03)
+  - Each chip shows: symbol + name + count badge
+  - whileHover scale 1.05 + lift, whileTap scale 0.95
+  - Active chip has shadow
+- Results counter with AnimatePresence (fades between query changes)
+- Letter group headers:
+  - Spring-in letter badge (scale 0 → 1, rotate -180° → 0)
+  - whileHover scale 1.15 + rotate 10°
+  - Animated counter for term count in group
+  - Divider line
+- Glossary cards:
+  - Stagger entrance (delay = 0.05 + index * 0.04)
+  - Per-term symbol with hover pulse (scale 1 → 1.2 → 1, rotate 0 → 10 → 0)
+  - Category badge with symbol + color
+  - Left gradient strip that widens on hover (3px → 4px)
+  - whileHover lift (y: -4) + scale 1.02 + shadow ring
+  - "Read full lesson" link with arrow that slides right on hover
+- Empty state with wobbly 🔍 animation (rotate 0 → -10 → 10 → 0)
+- Footer CTA with Sparkles icon
+- TypeScript: 0 errors · ESLint: 0 errors
+- Browser-verified: 64 terms render with symbols, search "attention" returns 8 results, category chips show counts, zero console errors
+
+Stage Summary:
+- Glossary now has 11 category symbols + 50+ per-term emojis
+- Rich animations: rotating hero symbol, spring-in letter badges, stagger card entrances, hover pulses on symbols, animated search bar, AnimatePresence transitions
+- All animations respect the dark theme with category-specific color gradients
