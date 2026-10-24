@@ -1,6 +1,7 @@
 'use client'
 
 import * as React from 'react'
+import { motion } from 'framer-motion'
 import * as Icons from 'lucide-react'
 import { useAppStore } from '@/store/useAppStore'
 import { getModule, getLesson, modules } from '@/data'
@@ -10,6 +11,7 @@ import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { ArticleContent } from '@/components/learn/article-content'
+import { ScrollReveal, getModuleSymbol } from '@/components/shared/animations'
 import { cn } from '@/lib/utils'
 import {
   ArrowLeft, ArrowRight, Bookmark, BookmarkCheck, CheckCircle2, Circle,
@@ -133,11 +135,25 @@ export function LessonView({ moduleId, lessonId }: { moduleId: string; lessonId:
           {/* Header */}
           <div className="mb-6">
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <motion.span
+                animate={{ rotate: [0, 10, 0] }}
+                transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+                className="text-base"
+              >
+                {getModuleSymbol(moduleId)}
+              </motion.span>
               <span className="font-mono">Lesson {index + 1} of {m.lessons.length}</span>
               <span>·</span>
               <span className="flex items-center gap-1"><Clock className="h-3 w-3" /> {lesson.readingMinutes} min read</span>
             </div>
-            <h1 className="mt-1 text-3xl font-bold tracking-tight">{lesson.title}</h1>
+            <motion.h1
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="mt-1 text-3xl font-bold tracking-tight"
+            >
+              {lesson.title}
+            </motion.h1>
             {lesson.subtitle && <p className="mt-1 text-base text-muted-foreground">{lesson.subtitle}</p>}
             <div className="mt-3 flex flex-wrap items-center gap-2">
               {lesson.tags.map((t) => <Badge key={t} variant="outline" className="text-[10px]">{t}</Badge>)}
@@ -355,12 +371,63 @@ export function LessonView({ moduleId, lessonId }: { moduleId: string; lessonId:
   )
 }
 
+// Symbols for each section type
+const SECTION_SYMBOLS: Record<string, string> = {
+  'Definition': '📖',
+  'Why It Exists': '🎯',
+  'How It Works': '⚙️',
+  'Examples': '💡',
+  'Advantages': '✅',
+  'Disadvantages': '⚠️',
+  'Common Mistakes': '🚫',
+  'Limitations': '🚧',
+  'Related Concepts': '🔗',
+  'Frequently Asked Questions': '❓',
+  'Summary': '📝',
+}
+
 function SectionHeader({ icon: Icon, title, color }: { icon: React.ComponentType<{ className?: string }>; title: string; color?: string }) {
+  const symbol = SECTION_SYMBOLS[title] ?? '📌'
   return (
-    <h2 className="mb-3 flex items-center gap-2 text-lg font-semibold">
-      <Icon className={cn('h-4 w-4', color ?? 'text-primary')} />
-      {title}
-    </h2>
+    <motion.h2
+      initial={{ opacity: 0, x: -20 }}
+      whileInView={{ opacity: 1, x: 0 }}
+      viewport={{ once: true, margin: '-50px' }}
+      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+      className="mb-3 flex items-center gap-2 text-lg font-semibold"
+    >
+      <motion.span
+        initial={{ scale: 0, rotate: -90 }}
+        whileInView={{ scale: 1, rotate: 0 }}
+        viewport={{ once: true }}
+        transition={{ type: 'spring', stiffness: 200, delay: 0.1 }}
+        className="text-xl"
+      >
+        {symbol}
+      </motion.span>
+      <motion.div
+        initial={{ scale: 0 }}
+        whileInView={{ scale: 1 }}
+        viewport={{ once: true }}
+        transition={{ type: 'spring', stiffness: 200, delay: 0.15 }}
+        className={cn('flex h-7 w-7 items-center justify-center rounded-lg', color ? `${color}/10` : 'bg-primary/10')}
+      >
+        <Icon className={cn('h-4 w-4', color ?? 'text-primary')} />
+      </motion.div>
+      <motion.span
+        initial={{ backgroundSize: '0% 100%' }}
+        whileInView={{ backgroundSize: '100% 100%' }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6, delay: 0.2 }}
+        style={{
+          backgroundImage: 'linear-gradient(120deg, transparent 0%, transparent 100%)',
+          backgroundRepeat: 'no-repeat',
+          backgroundPosition: '0 88%',
+        }}
+      >
+        {title}
+      </motion.span>
+    </motion.h2>
   )
 }
 

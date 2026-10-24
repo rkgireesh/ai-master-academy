@@ -219,3 +219,78 @@ Stage Summary:
 - Glossary now has 11 category symbols + 50+ per-term emojis
 - Rich animations: rotating hero symbol, spring-in letter badges, stagger card entrances, hover pulses on symbols, animated search bar, AnimatePresence transitions
 - All animations respect the dark theme with category-specific color gradients
+
+---
+Task ID: home-modules-lesson-animations-symbols
+Agent: main (Z.ai)
+Task: Add scrolling animations + symbols across Home, Modules, Module detail, and Lesson views
+
+Work Log:
+- Built shared animations utility (src/components/shared/animations.tsx):
+  - ScrollReveal: fade + slide in when scrolled into view (useInView)
+  - StaggerGroup + StaggerItem: staggered entrance for grids/lists
+  - Parallax: scroll-driven vertical movement
+  - GradientText: animated gradient text (background-position loop)
+  - Floating: continuous y-axis float animation
+  - PulsingGlow: pulsing background glow
+  - SectionHeading: animated section header with symbol + gradient underline
+  - MODULE_SYMBOLS map: 🧠 m1, ✨ m2, 💬 m3, 📐 m4, 🔍 m5, 🤖 m6, 👥 m7, 🔧 m8, 💾 m9, 🕸️ m10, 📚 m11, 🚀 m12
+
+- Enhanced Home view:
+  - Floating decorative symbols in hero (🧠 ✨ 💬 🔍 🤖 🚀) with continuous y-float
+  - Animated badge with counter (12 modules · 186 lessons)
+  - GradientText for "Modern AI" (animated gradient)
+  - Spring-in buttons with hover scale
+  - "🚀 Start Learning" button with rocket symbol
+  - ScrollReveal for progress strip with animated counters
+  - All section headings use SectionHeading with symbols: 🎯 Featured Paths, 🕸️ Hierarchy, 📚 Tutorials, ⚡ Interactive Cards, 🧪 Labs, 🗺️ Roadmap, 🛠️ Projects
+  - StaggerGroup for all card grids (cards fade in one-by-one as you scroll)
+  - Module symbols on every card (floating animation)
+  - Animated arrows between roadmap stages (x-axis oscillation)
+  - PulsingGlow on final CTA
+
+- Enhanced Modules view:
+  - Spring-in header with 📚 symbol (rotate from -180°)
+  - Animated counter for module count
+  - StaggerGroup with stagger 0.08 for module cards
+  - Each card: hover lift + scale, module symbol with float animation
+  - Level badges with symbols: 🌱 Beginner, ⚡ Intermediate, 🚀 Advanced, 🏆 Expert
+  - Animated progress bars (width animates when scrolled into view)
+  - "🌱 Start" / "⚡ Continue" / "✅ Review" labels with symbols
+
+- Enhanced Module detail view:
+  - Breadcrumb with slide-in entrance
+  - Header with animated entrance (opacity + y + scale)
+  - Floating decorative module symbol in header corner (y-float + rotate)
+  - Spring-in icon (rotate from -90°)
+  - Animated progress bar (width animates after delay)
+  - Spring hover on action buttons
+  - Lesson list with StaggerGroup (each lesson slides in 0.04s after previous)
+  - Each lesson button: whileHover x:4 + scale, spring checkmark pop-in
+  - "✅" emoji on completed lessons
+  - Next module button shows the next module's symbol
+
+- Enhanced Lesson view:
+  - Module symbol with rotate animation in lesson header (🧠 for m1)
+  - Animated h1 entrance (opacity + y)
+  - SectionHeader completely redesigned:
+    - Slide-in from left (opacity + x)
+    - Symbol with spring-in + rotate (📖 📖 🎯 ⚙️ 💡 ✅ ⚠️ 🚫 🚧 🔗 ❓ 📝)
+    - Icon in colored rounded square (spring-in scale)
+    - Section title with animated background gradient sweep
+  - Each section header animates independently when scrolled into view
+
+- TypeScript: 0 errors · ESLint: 0 errors
+- Browser-verified:
+  - Home: floating symbols (🧠✨💬🔍), animated badge counter, all section headings with symbols, stagger entrance on cards
+  - Modules: 📚 header, module symbols on every card (🧠✨💬📐🔍🤖), level badges (🌱⚡🚀🏆), animated progress bars
+  - Module detail: animated header with floating symbol, stagger lesson list
+  - Lesson: 🧠 module symbol, section headers with 📖🎯⚙️💡✅⚠️🚫🚧🔗❓📝 symbols, scroll-triggered reveals
+  - Zero console errors
+
+Stage Summary:
+- Built reusable animation toolkit (ScrollReveal, StaggerGroup, Parallax, GradientText, Floating, PulsingGlow, SectionHeading)
+- Added symbols to: 12 modules, 4 difficulty levels, 11 lesson sections, 6 labs, 6 interactive cards, all home sections
+- Scroll-triggered animations everywhere: cards stagger in, section headers slide in, progress bars fill, symbols float
+- Hover effects: lift, scale, rotate on every interactive card
+- All animations respect the dark theme with violet/blue gradient palette
