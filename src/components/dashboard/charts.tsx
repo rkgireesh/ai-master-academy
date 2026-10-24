@@ -91,6 +91,7 @@ export function ModuleProgressChart({ data, delay = 0.2 }: ModuleBarChartProps) 
             tickLine={false}
             axisLine={false}
             width={32}
+            allowDecimals={false}
           />
           <Tooltip
             contentStyle={TOOLTIP_STYLE}
@@ -203,6 +204,7 @@ export function ActivityAreaChart({ data, delay = 0.4 }: ActivityAreaChartProps)
             tickLine={false}
             axisLine={false}
             width={32}
+            allowDecimals={false}
           />
           <Tooltip
             contentStyle={TOOLTIP_STYLE}
@@ -227,7 +229,9 @@ export function ActivityAreaChart({ data, delay = 0.4 }: ActivityAreaChartProps)
 
 // ---------- Overall Progress Radial Gauge ----------
 export function OverallProgressGauge({ pct, delay = 0.5 }: { pct: number; delay?: number }) {
-  const data = [{ name: 'progress', value: pct, fill: 'rgb(124, 92, 255)' }]
+  // Clamp pct to [0, 100] to avoid degenerate angle ranges
+  const safePct = Math.max(0, Math.min(100, pct))
+  const data = [{ name: 'progress', value: safePct, fill: 'rgb(124, 92, 255)' }]
 
   return (
     <ChartCard
@@ -239,14 +243,25 @@ export function OverallProgressGauge({ pct, delay = 0.5 }: { pct: number; delay?
         <ResponsiveContainer width="100%" height={200}>
           <RadialBarChart
             data={data}
+            // Full 360° circle — never degenerate.
+            // RadialBar fills proportionally: value=100 → full circle, value=50 → half.
             startAngle={90}
-            endAngle={90 - 360 * (pct / 100)}
+            endAngle={-270}
             innerRadius={68}
             outerRadius={95}
             cx="50%"
             cy="50%"
           >
-            <PolarAngleAxis type="number" domain={[0, 100]} tick={false} />
+            {/* tick={false} hides ticks visually. The non-degenerate 360°
+                angle range (startAngle=90, endAngle=-270) prevents the
+                duplicate "tick-90" key error that occurred when pct=0
+                made startAngle === endAngle. */}
+            <PolarAngleAxis
+              type="number"
+              domain={[0, 100]}
+              tick={false}
+              axisLine={false}
+            />
             <RadialBar
               background={{ fill: 'hsl(var(--muted))' }}
               dataKey="value"
